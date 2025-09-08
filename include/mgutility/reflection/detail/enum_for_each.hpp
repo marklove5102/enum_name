@@ -47,7 +47,7 @@ template <typename T>
 // NOLINTNEXTLINE [modernize-type-traits]
 using string_or_view_t = typename std::conditional<
     has_bit_or<T>::value,
-    mgutility::fixed_string<MGUTILITY_ENUM_NAME_BUFFER_SIZE>,
+    mgutility::fixed_string<enum_name_buffer<T>::size>,
     mgutility::string_view>::type;
 
 /**

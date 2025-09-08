@@ -16,8 +16,10 @@ add_library(mgutility::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Specify the include directories for the library
 target_include_directories(
-  enum_name INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                      $<INSTALL_INTERFACE:include>)
+  enum_name
+  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mgutility/include>
+            $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:mgutility/include>)
 
 # Set the C++ standard
 target_compile_features(enum_name INTERFACE cxx_std_11)
@@ -28,7 +30,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   message(STATUS "Compiler is Clang")
   # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif()
-
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
   include(GNUInstallDirs)
@@ -77,7 +78,6 @@ if(NOT ${ENUM_NAME_NO_INSTALL})
     FILE "${CMAKE_CURRENT_BINARY_DIR}/enum_nameTargets.cmake"
     NAMESPACE mgutility::)
 endif()
-
 
 if(NOT ${ENUM_NAME_NO_TESTS})
   # Enable testing

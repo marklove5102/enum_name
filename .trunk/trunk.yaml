@@ -32,6 +32,19 @@ lint:
     - trufflehog@3.88.2
     - yamllint@1.35.1
 
+  ignore:
+    - linters: [ALL]
+      paths:
+        - build/**
+        - tests/**
+        - scripts/**
+        - .vscode/**
+        - .devcontainer/**
+        - .github/**
+        - .trunk/**
+        - .git/**
+        - README.md
+
 actions:
   disabled:
     - trunk-announce
