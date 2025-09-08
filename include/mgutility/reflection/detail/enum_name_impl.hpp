@@ -283,7 +283,7 @@ MGUTILITY_CNSTXPR auto enum_name_impl(Enum enumValue) noexcept
 template <typename Enum, int Min, int Max,
           detail::enable_if_t<detail::has_bit_or<Enum>::value, bool> = true>
 MGUTILITY_CNSTXPR_CLANG_WA auto enum_name_impl(Enum enumValue) noexcept
-    -> mgutility::fixed_string<MGUTILITY_ENUM_NAME_BUFFER_SIZE> {
+    -> mgutility::fixed_string<enum_name_buffer<Enum>::size> {
 
   // Get the array of enum names
   MGUTILITY_CNSTXPR_CLANG_WA auto arr = get_enum_array<Enum, Min, Max>();
@@ -295,12 +295,11 @@ MGUTILITY_CNSTXPR_CLANG_WA auto enum_name_impl(Enum enumValue) noexcept
 
   // Return the name if it's valid
   if (!name.empty() && !is_digit(name[0])) {
-    return mgutility::fixed_string<MGUTILITY_ENUM_NAME_BUFFER_SIZE>{}.append(
-        name);
+    return mgutility::fixed_string<enum_name_buffer<Enum>::size>{}.append(name);
   }
 
   // Construct bitmasked name
-  mgutility::fixed_string<MGUTILITY_ENUM_NAME_BUFFER_SIZE> bitmasked_name;
+  mgutility::fixed_string<enum_name_buffer<Enum>::size> bitmasked_name;
   for (auto i = Min; i < Max; ++i) {
     const auto idx = (Min < 0 ? -Min : Min) + i + 1;
     if (idx >= 0 && idx < static_cast<int>(arr.size()) && !arr[idx].empty() &&
