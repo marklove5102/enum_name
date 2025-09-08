@@ -25,7 +25,7 @@ var searchData=
   ['should_5fstringify_5fas_5funderlying_5ftype_22',['should_stringify_as_underlying_type',['../structdoctest_1_1detail_1_1should__stringify__as__underlying__type.html',1,'doctest::detail']]],
   ['simple_20example_23',['A simple example',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2tutorial.html#autotoc_md178',1,'']]],
   ['singleton_24',['singleton',['../structdetail_1_1singleton.html',1,'detail']]],
-  ['size_25',['size',['../structformat__to__n__result.html#ab1c815078e1a78716bb07b9ed8c7023b',1,'format_to_n_result::size'],['../classbasic__string__view.html#a216bbe1b012b590698d7bb4e96d1af3f',1,'basic_string_view::size()'],['../classdetail_1_1buffer.html#a8685285932360c284d19003fc4ba3edc',1,'detail::buffer::size()'],['../classformat__int.html#a2f1870d4b535ead8699717fdcb25e997',1,'format_int::size()'],['../classmgutility_1_1enum__for__each.html#a0d833b4ee26998c4373aee17be12cd90',1,'mgutility::enum_for_each::size()'],['../classmgutility_1_1basic__string__view.html#a26e96c7b63f54ccd9306e3a4ecf5b336',1,'mgutility::basic_string_view::size()']]],
+  ['size_25',['size',['../structformat__to__n__result.html#ab1c815078e1a78716bb07b9ed8c7023b',1,'format_to_n_result::size'],['../classbasic__string__view.html#a216bbe1b012b590698d7bb4e96d1af3f',1,'basic_string_view::size()'],['../classdetail_1_1buffer.html#a8685285932360c284d19003fc4ba3edc',1,'detail::buffer::size()'],['../classformat__int.html#a2f1870d4b535ead8699717fdcb25e997',1,'format_int::size()'],['../classmgutility_1_1enum__for__each.html#a0d833b4ee26998c4373aee17be12cd90',1,'mgutility::enum_for_each::size()']]],
   ['slow_5ffloat_26',['slow_float',['../structslow__float.html',1,'']]],
   ['small_5fgrouping_27',['small_grouping',['../structsmall__grouping.html',1,'']]],
   ['somefixture_28',['SomeFixture',['../structSomeFixture.html',1,'']]],
@@ -78,12 +78,10 @@ var searchData=
   ['subcase_75',['Subcase',['../structdoctest_1_1detail_1_1Subcase.html',1,'doctest::detail::Subcase'],['../structSubcase.html',1,'Subcase']]],
   ['subcases_76',['Test cases and subcases',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2tutorial.html#autotoc_md180',1,'']]],
   ['subcasesignature_77',['SubcaseSignature',['../structdoctest_1_1SubcaseSignature.html',1,'doctest']]],
-  ['substr_78',['substr',['../classmgutility_1_1basic__string__view.html#afaa73ee06ad76de37e100e06f98822ee',1,'mgutility::basic_string_view']]],
-  ['suiteapiresolver_79',['SuiteApiResolver',['../structtesting_1_1internal_1_1SuiteApiResolver.html',1,'testing::internal']]],
-  ['suites_80',['Test suites',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2testcases.html#autotoc_md173',1,'']]],
-  ['support_81',['Bazel support',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2fmt-src_2support_2bazel_2README.html',1,'']]],
-  ['supported_82',['Is mocking supported?',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2faq.html#autotoc_md131',1,'']]],
-  ['supported_20compilers_83',['Supported Compilers',['../md__2home_2runner_2work_2enum__name_2enum__name_2README.html#autotoc_md279',1,'']]],
-  ['swap_84',['swap',['../classmgutility_1_1optional.html#a5b5ec8a5d27ada527e1a769470c7a7c4',1,'mgutility::optional']]],
-  ['systems_85',['Build systems',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2build-systems.html',1,'']]]
+  ['suiteapiresolver_78',['SuiteApiResolver',['../structtesting_1_1internal_1_1SuiteApiResolver.html',1,'testing::internal']]],
+  ['suites_79',['Test suites',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2testcases.html#autotoc_md173',1,'']]],
+  ['support_80',['Bazel support',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2fmt-src_2support_2bazel_2README.html',1,'']]],
+  ['supported_81',['Is mocking supported?',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2faq.html#autotoc_md131',1,'']]],
+  ['supported_20compilers_82',['Supported Compilers',['../md__2home_2runner_2work_2enum__name_2enum__name_2README.html#autotoc_md279',1,'']]],
+  ['systems_83',['Build systems',['../md__2home_2runner_2work_2enum__name_2enum__name_2build_2__deps_2doctest-src_2doc_2markdown_2build-systems.html',1,'']]]
 ];

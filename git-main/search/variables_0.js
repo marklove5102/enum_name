@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nullopt_0',['nullopt',['../namespacemgutility.html#a2472ad38d80978a9a8c3150e0e2ba43c',1,'mgutility']]]
+  ['out_0',['out',['../structformat__to__n__result.html#a90597c6c1d23c7301aef16e756c6263b',1,'format_to_n_result']]]
 ];

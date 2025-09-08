@@ -40,11 +40,9 @@ var searchData=
   ['null_5fchrono_5fspec_5fhandler_37',['null_chrono_spec_handler',['../structdetail_1_1null__chrono__spec__handler.html',1,'detail']]],
   ['null_5fchrono_5fspec_5fhandler_3c_20chrono_5fformat_5fchecker_20_3e_38',['null_chrono_spec_handler&lt; chrono_format_checker &gt;',['../structdetail_1_1null__chrono__spec__handler.html',1,'detail']]],
   ['null_5fchrono_5fspec_5fhandler_3c_20tm_5fformat_5fchecker_20_3e_39',['null_chrono_spec_handler&lt; tm_format_checker &gt;',['../structdetail_1_1null__chrono__spec__handler.html',1,'detail']]],
-  ['nullopt_40',['nullopt',['../namespacemgutility.html#a2472ad38d80978a9a8c3150e0e2ba43c',1,'mgutility']]],
-  ['nullopt_5ft_41',['nullopt_t',['../structmgutility_1_1nullopt__t.html',1,'mgutility']]],
-  ['num_42',['num',['../structnum.html',1,'']]],
-  ['numeric_5farg_5ftest_43',['numeric_arg_test',['../classnumeric__arg__test.html',1,'']]],
-  ['numeric_5flimits_3c_20double_5fdouble_20_3e_44',['numeric_limits&lt; double_double &gt;',['../structstd_1_1numeric__limits_3_01double__double_01_4.html',1,'std']]],
-  ['numeric_5flimits_3c_20slow_5ffloat_20_3e_45',['numeric_limits&lt; slow_float &gt;',['../structstd_1_1numeric__limits_3_01slow__float_01_4.html',1,'std']]],
-  ['numpunct_46',['numpunct',['../structnumpunct.html',1,'']]]
+  ['num_40',['num',['../structnum.html',1,'']]],
+  ['numeric_5farg_5ftest_41',['numeric_arg_test',['../classnumeric__arg__test.html',1,'']]],
+  ['numeric_5flimits_3c_20double_5fdouble_20_3e_42',['numeric_limits&lt; double_double &gt;',['../structstd_1_1numeric__limits_3_01double__double_01_4.html',1,'std']]],
+  ['numeric_5flimits_3c_20slow_5ffloat_20_3e_43',['numeric_limits&lt; slow_float &gt;',['../structstd_1_1numeric__limits_3_01slow__float_01_4.html',1,'std']]],
+  ['numpunct_44',['numpunct',['../structnumpunct.html',1,'']]]
 ];
