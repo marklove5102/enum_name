@@ -36,6 +36,7 @@ lint:
       paths:
         - build/**
         - tests/**
+        - example/**
         - scripts/**
         - .vscode/**
         - .devcontainer/**
