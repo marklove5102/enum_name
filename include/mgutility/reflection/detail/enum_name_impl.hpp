@@ -295,8 +295,7 @@ MGUTILITY_CNSTXPR_CLANG_WA auto enum_name_impl(Enum enumValue) noexcept
 
   // Return the name if it's valid
   if (!name.empty() && !is_digit(name[0])) {
-    return mgutility::fixed_string<enum_name_buffer<Enum>::size>{}.append(
-        name);
+    return mgutility::fixed_string<enum_name_buffer<Enum>::size>{}.append(name);
   }
 
   // Construct bitmasked name

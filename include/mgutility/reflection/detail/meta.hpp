@@ -202,8 +202,7 @@ template <typename T> struct custom_enum {
  *
  * @tparam T The enumeration type.
  */
-template <typename T> 
-struct enum_name_buffer {
+template <typename T> struct enum_name_buffer {
   static constexpr auto size = MGUTILITY_ENUM_NAME_BUFFER_SIZE;
 };
 
