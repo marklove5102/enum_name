@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_CXX_STANDARD=${{ matrix.cpp_standard }} ..
+          cmake -DCMAKE_CXX_STANDARD=${{ matrix.cpp_standard }} -DENUM_NAME_BUILD_TESTS=ON ..
           cmake --build . --config Release
           ctest -j2 --output-on-failure -C Release
 
@@ -43,6 +43,7 @@ jobs:
           - { compiler: gcc, version: 10, build_type: Debug, cppstd: 20 }
           - { compiler: gcc, version: 12, build_type: Release, cppstd: 20 }
           - { compiler: gcc, version: 13, build_type: Release, cppstd: 20 }
+          - { compiler: gcc, version: 14, build_type: Release, cppstd: 23 }
           - { compiler: clang, version: 11, build_type: Release, cppstd: 11 }
           - { compiler: clang, version: 11, build_type: Release, cppstd: 14 }
           - { compiler: clang, version: 11, build_type: Release, cppstd: 17 }
@@ -55,16 +56,16 @@ jobs:
             }
           - {
               compiler: clang,
-              version: 12,
+              version: 15,
               build_type: Debug,
-              cppstd: 17,
+              cppstd: 20,
               asan: OFF,
             }
           - {
               compiler: clang,
-              version: 15,
+              version: 20,
               build_type: Release,
-              cppstd: 20,
+              cppstd: 23,
               asan: OFF,
             }
     container:
@@ -96,6 +97,7 @@ jobs:
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DENUM_NAME_BUILD_TESTS=ON \
             -DCMAKE_CXX_STANDARD=${{ matrix.config.cppstd }}
           make -j2
           ctest -j2 --output-on-failure
