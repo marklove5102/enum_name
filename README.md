@@ -52,7 +52,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE mgutility::enum_name)
 | ENUM_NAME_FETCH_FMT | Fetch fmt library | OFF |
 | ENUM_NAME_INSTALL | Install the enum_name library | OFF |
 
-## Example usage ([try it!](https://godbolt.org/z/PPEh78dbP))
+## Example usage ([try it!](https://godbolt.org/z/WGvEYYh1b))
 
 ```C++
 #include <iostream>
