@@ -4,9 +4,12 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
+add_compile_definitions(MGUTILITY_ENUM_NAME_OPTIMIZE_FOR_SIZE)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} mgutility::enum_name)
+
 
 if(ENUM_NAME_FETCH_FMT)
   add_compile_definitions(ENUM_NAME_USE_FMT)

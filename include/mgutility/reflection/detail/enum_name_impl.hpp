@@ -29,6 +29,7 @@ SOFTWARE.
 #include "enum_for_each.hpp"
 #include "meta.hpp"
 #include "mgutility/_common/definitions.hpp"
+#include "mgutility/std/fixed_string.hpp"
 #include "mgutility/std/optional.hpp"
 #include "mgutility/std/string_view.hpp"
 
@@ -88,6 +89,14 @@ namespace detail {
  * compile-time.
  */
 struct enum_type {
+
+  template <typename Enum>
+#ifdef MGUTILITY_ENUM_NAME_OPTIMIZE_FOR_SIZE
+  using string_type = mgutility::fixed_string<enum_name_buffer<Enum>::size>;
+#else
+  using string_type = mgutility::string_view;
+#endif
+
 private:
   /**
    * @brief Extracts raw name from compiler's __PRETTY_FUNCTION__.
@@ -132,8 +141,9 @@ private:
    * @param str The raw string from __PRETTY_FUNCTION__.
    * @return The parsed enum name.
    */
-  MGUTILITY_CNSTXPR static mgutility::string_view
-  parse(mgutility::string_view str) noexcept {
+  template <typename Enum, Enum e>
+  MGUTILITY_CNSTXPR static string_type<Enum> parse() noexcept {
+    auto str = raw_name<Enum, e>();
 #if defined(__clang__) || defined(__GNUC__)
 #if defined(__clang__)
     auto end = str.rfind(']');
@@ -175,7 +185,7 @@ private:
       return {};
     }
 
-    return result.substr(result.rfind(':') + 1);
+    return string_type<Enum>(result.substr(result.rfind(':') + 1));
   }
 
 public:
@@ -187,8 +197,8 @@ public:
    * @return The name of the enum value.
    */
   template <typename Enum, Enum e>
-  MGUTILITY_CNSTXPR static mgutility::string_view name() noexcept {
-    return parse(raw_name<Enum, e>());
+  MGUTILITY_CNSTXPR static string_type<Enum> name() noexcept {
+    return parse<Enum, e>();
   }
 };
 
@@ -198,7 +208,7 @@ public:
  * @tparam Enum The enum type.
  * @tparam Seq The enum sequence.
  */
-template <typename Enum, typename Seq> struct enum_array_cache;
+template <typename Enum, int Min, typename Seq> struct enum_array_cache;
 
 /**
  * @brief Specialization of enum_array_cache for enum_sequence.
@@ -206,25 +216,25 @@ template <typename Enum, typename Seq> struct enum_array_cache;
  * @tparam Enum The enum type.
  * @tparam Is The enum values.
  */
-template <typename Enum, Enum... Is>
-struct enum_array_cache<Enum, detail::enum_sequence<Enum, Is...>> {
+template <typename Enum, int Min, Enum... Is>
+struct enum_array_cache<Enum, Min, detail::enum_sequence<Enum, Is...>> {
 #if MGUTILITY_CPLUSPLUS >= 201402L
   // C++17+: fully constexpr
   // NOLINTNEXTLINE [readability-redundant-inline-specifier]
-  static inline constexpr std::array<mgutility::string_view, sizeof...(Is) + 1>
+  static inline constexpr std::array<enum_type::string_type<Enum>,
+                                     sizeof...(Is) + 1>
   value() {
-    std::array<mgutility::string_view, sizeof...(Is) + 1> arr{
+    std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1> arr{
         "", enum_type::template name<Enum, Is>()...};
 
     constexpr auto map = mgutility::custom_enum<Enum>::map;
 
     for (const auto &pair : map) {
       const int raw = static_cast<int>(pair.first);
-      const auto idx =
-          static_cast<size_t>(raw - mgutility::enum_range<Enum>::min + 1);
+      const auto idx = static_cast<size_t>(raw - Min + 1);
 
       if (idx >= 1 && idx < arr.size()) {
-        arr[idx] = pair.second;
+        arr[idx] = enum_type::string_type<Enum>(pair.second);
       }
     }
 
@@ -232,19 +242,19 @@ struct enum_array_cache<Enum, detail::enum_sequence<Enum, Is...>> {
   }
 #else
   // C++11: lazy runtime array
-  static const std::array<mgutility::string_view, sizeof...(Is) + 1> &value() {
-    static const std::array<mgutility::string_view, sizeof...(Is) + 1> arr =
-        [] {
-          std::array<mgutility::string_view, sizeof...(Is) + 1> tmp{
+  static const std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1> &
+  value() {
+    static const std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1>
+        arr = [] {
+          std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1> tmp{
               "", enum_type::template name<Enum, Is>()...};
 
           for (const auto &pair : mgutility::custom_enum<Enum>::map) {
             auto idx =
-                static_cast<size_t>(static_cast<int>(pair.first) -
-                                    mgutility::enum_range<Enum>::min + 1);
+                static_cast<size_t>(static_cast<int>(pair.first) - Min + 1);
 
             if (idx >= 1 && idx < tmp.size()) {
-              tmp[idx] = pair.second;
+              tmp[idx] = enum_type::string_type<Enum>(pair.second);
             }
           }
 
@@ -264,15 +274,17 @@ struct enum_array_cache<Enum, detail::enum_sequence<Enum, Is...>> {
  * @param unused The enum sequence (unused parameter).
  * @return An array of string_views containing the enum names.
  */
-template <typename Enum, Enum... Is>
+template <typename Enum, int Min, Enum... Is>
 MGUTILITY_CNSTXPR auto
 get_enum_array(detail::enum_sequence<Enum, Is...> /*unused*/) noexcept
 #if MGUTILITY_CPLUSPLUS >= 201402L
-    -> std::array<mgutility::string_view, sizeof...(Is) + 1> {
-  return enum_array_cache<Enum, detail::enum_sequence<Enum, Is...>>::value();
+    -> std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1> {
+  return enum_array_cache<Enum, Min,
+                          detail::enum_sequence<Enum, Is...>>::value();
 #else
-    -> const std::array<mgutility::string_view, sizeof...(Is) + 1> & {
-  return enum_array_cache<Enum, detail::enum_sequence<Enum, Is...>>::value();
+    -> const std::array<enum_type::string_type<Enum>, sizeof...(Is) + 1> & {
+  return enum_array_cache<Enum, Min,
+                          detail::enum_sequence<Enum, Is...>>::value();
 #endif
 }
 
@@ -289,11 +301,13 @@ template <typename Enum, int Min = mgutility::enum_range<Enum>::min,
           int Max = mgutility::enum_range<Enum>::max>
 MGUTILITY_CNSTXPR auto get_enum_array() noexcept
 #if MGUTILITY_CPLUSPLUS >= 201402L
-    -> std::array<mgutility::string_view, Max - Min + 2> {
-  return get_enum_array<Enum>(detail::make_enum_sequence<Enum, Min, Max>());
+    -> std::array<enum_type::string_type<Enum>, Max - Min + 2> {
+  return get_enum_array<Enum, Min>(
+      detail::make_enum_sequence<Enum, Min, Max>());
 #else
-    -> const std::array<mgutility::string_view, Max - Min + 2> & {
-  return get_enum_array<Enum>(detail::make_enum_sequence<Enum, Min, Max>());
+    -> const std::array<enum_type::string_type<Enum>, Max - Min + 2> & {
+  return get_enum_array<Enum, Min>(
+      detail::make_enum_sequence<Enum, Min, Max>());
 #endif
 }
 

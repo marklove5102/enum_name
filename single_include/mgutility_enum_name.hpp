@@ -908,210 +908,190 @@ struct fmt::formatter<mgutility::fixed_string<N>> : formatter<string_view> {
 
 namespace mgutility {
 
-#if MGUTILITY_CPLUSPLUS < 201703L
-
 /**
- * @brief Exception thrown when accessing an empty optional.
- */
-struct bad_optional_access : public std::exception {
-  /**
-   * @brief Returns the exception message.
-   *
-   * @return A C-string with the exception message.
-   */
-  const char *what() const noexcept override { return "optional has no value"; }
-};
-
-struct nullopt_t;
-
-/**
- * @brief A class template that provides optional (nullable) objects.
+ * @brief A simple optional implementation for C++11.
  *
- * @tparam T The type of the value.
+ * @tparam T The type.
  */
 template <typename T> class optional {
 public:
   /**
-   * @brief Constructs an empty optional.
+   * @brief Default constructor.
    */
-  MGUTILITY_CNSTXPR inline explicit optional(nullopt_t & /*unused*/)
-      : dummy_{0}, has_value_{false} {}
+  MGUTILITY_CNSTXPR optional() noexcept : has_value_(false) {}
 
   /**
-   * @brief Constructs an empty optional.
-   */
-  MGUTILITY_CNSTXPR inline optional() : dummy_{0}, has_value_{false} {}
-
-  /**
-   * @brief Constructs an optional with a value.
+   * @brief Constructor from value.
    *
-   * @tparam Args The types of the arguments.
-   * @param args The arguments to construct the value.
+   * @param value The value.
    */
-  template <typename... Args>
-  MGUTILITY_CNSTXPR inline explicit optional(Args &&...args)
-      : value_{T{std::forward<Args>(args)...}}, has_value_{true} {}
+  MGUTILITY_CNSTXPR optional(const T &value) noexcept : has_value_(true) {
+    new (&storage_) T(value);
+  }
 
   /**
-   * @brief Constructs an optional with a value.
+   * @brief Constructor from rvalue.
    *
-   * @param value The value to initialize with.
+   * @param value The value.
    */
-  MGUTILITY_CNSTXPR inline explicit optional(T &&value)
-      : value_{std::move(value)}, has_value_{true} {}
+  MGUTILITY_CNSTXPR optional(T &&value) noexcept : has_value_(true) {
+    new (&storage_) T(std::move(value));
+  }
 
   /**
    * @brief Copy constructor.
    *
-   * @param other The other optional to copy.
+   * @param other The other optional.
    */
-  MGUTILITY_CNSTXPR inline optional(const optional &other)
-      : value_{other.value_}, has_value_{other.has_value_} {}
+  MGUTILITY_CNSTXPR optional(const optional &other) noexcept
+      : has_value_(other.has_value_) {
+    if (has_value_) {
+      new (&storage_) T(other.value());
+    }
+  }
 
   /**
    * @brief Move constructor.
    *
-   * @param other The other optional to move.
+   * @param other The other optional.
    */
-  MGUTILITY_CNSTXPR inline optional(optional &&other) noexcept
-      : value_{other.value_}, has_value_{other.has_value_} {
-    other.reset();
+  MGUTILITY_CNSTXPR optional(optional &&other) noexcept
+      : has_value_(other.has_value_) {
+    if (has_value_) {
+      new (&storage_) T(std::move(other.value()));
+      other.reset();
+    }
   }
 
   /**
    * @brief Destructor.
    */
-  ~optional() = default;
+  ~optional() { reset(); }
 
   /**
-   * @brief Copy assignment operator.
+   * @brief Copy assignment.
    *
-   * @param other The other optional to copy.
-   * @return A reference to this optional.
+   * @param other The other optional.
+   * @return This.
    */
-  MGUTILITY_CNSTXPR inline optional &operator=(const optional &other) {
-    value_ = other.value_;
-    has_value_ = other.has_value_;
+  MGUTILITY_CNSTXPR optional &operator=(const optional &other) noexcept {
+    if (this != &other) {
+      reset();
+      has_value_ = other.has_value_;
+      if (has_value_) {
+        new (&storage_) T(other.value());
+      }
+    }
     return *this;
   }
 
   /**
-   * @brief Move assignment operator.
+   * @brief Move assignment.
    *
-   * @param other The other optional to move.
-   * @return A reference to this optional.
+   * @param other The other optional.
+   * @return This.
    */
-  MGUTILITY_CNSTXPR inline optional &operator=(optional &&other) noexcept {
-    value_ = other.value_;
-    has_value_ = other.has_value_;
-    other.reset();
+  MGUTILITY_CNSTXPR optional &operator=(optional &&other) noexcept {
+    if (this != &other) {
+      reset();
+      has_value_ = other.has_value_;
+      if (has_value_) {
+        new (&storage_) T(std::move(other.value()));
+        other.reset();
+      }
+    }
     return *this;
   }
 
   /**
-   * @brief Swaps the contents of this optional with another.
+   * @brief Assignment from value.
    *
-   * @param other The other optional to swap with.
+   * @param value The value.
+   * @return This.
    */
-  MGUTILITY_CNSTXPR inline void swap(optional &other) noexcept {
-    auto val = std::move(other.value_);
-    other.value_ = std::move(value_);
-    value_ = std::move(val);
-
-    auto hval = other.has_value_;
-    other.has_value_ = has_value_;
-    has_value_ = hval;
+  MGUTILITY_CNSTXPR optional &operator=(const T &value) noexcept {
+    reset();
+    has_value_ = true;
+    new (&storage_) T(value);
+    return *this;
   }
 
   /**
-   * @brief Dereferences the stored value.
+   * @brief Assignment from rvalue.
    *
-   * @return A reference to the stored value.
+   * @param value The value.
+   * @return This.
    */
-  MGUTILITY_CNSTXPR inline T &operator*() { return value_; }
+  MGUTILITY_CNSTXPR optional &operator=(T &&value) noexcept {
+    reset();
+    has_value_ = true;
+    new (&storage_) T(std::move(value));
+    return *this;
+  }
 
   /**
-   * @brief Dereferences the stored value (const version).
+   * @brief Checks if has value.
    *
-   * @return A reference to the stored value.
+   * @return True if has value.
    */
-  MGUTILITY_CNSTXPR inline T &operator*() const { return value_; }
+  MGUTILITY_CNSTXPR bool has_value() const noexcept { return has_value_; }
 
   /**
-   * @brief Accesses the stored value.
+   * @brief Checks if has value.
    *
-   * @return A reference to the stored value.
-   * @throws bad_optional_access if the optional has no value.
+   * @return True if has value.
    */
-  MGUTILITY_CNSTXPR inline T &value() {
-    if (!has_value_) {
-      throw bad_optional_access();
+  MGUTILITY_CNSTXPR explicit operator bool() const noexcept {
+    return has_value_;
+  }
+
+  /**
+   * @brief Returns the value.
+   *
+   * @return The value.
+   */
+  MGUTILITY_CNSTXPR T &value() noexcept {
+    return *reinterpret_cast<T *>(&storage_);
+  }
+
+  /**
+   * @brief Returns the const value.
+   *
+   * @return The const value.
+   */
+  MGUTILITY_CNSTXPR const T &value() const noexcept {
+    return *reinterpret_cast<const T *>(&storage_);
+  }
+
+  /**
+   * @brief Returns the value or default.
+   *
+   * @param default_value The default value.
+   * @return The value or default.
+   */
+  MGUTILITY_CNSTXPR T value_or(const T &default_value) const noexcept {
+    return has_value_ ? value() : default_value;
+  }
+
+  /**
+   * @brief Resets the optional.
+   */
+  MGUTILITY_CNSTXPR void reset() noexcept {
+    if (has_value_) {
+      value().~T();
+      has_value_ = false;
     }
-    return value_;
   }
 
   /**
-   * @brief Accesses the stored value (const version).
+   * @brief Emplaces a value.
    *
-   * @return A reference to the stored value.
-   * @throws bad_optional_access if the optional has no value.
+   * @param args The arguments.
+   * @return The value.
    */
-  MGUTILITY_CNSTXPR inline T &value() const {
-    if (!has_value_) {
-      throw bad_optional_access();
-    }
-    return value_;
-  }
-
-  /**
-   * @brief Returns the stored value or a default value if empty.
-   *
-   * @param value The default value to return if empty.
-   * @return The stored value or the default value.
-   */
-  MGUTILITY_CNSTXPR inline T value_or(T &&value) {
-    return has_value_ ? value_ : std::move(value);
-  }
-
-  /**
-   * @brief Returns the stored value or a default value if empty (const
-   * version).
-   *
-   * @param value The default value to return if empty.
-   * @return The stored value or the default value.
-   */
-  MGUTILITY_CNSTXPR inline T value_or(T &&value) const {
-    return has_value_ ? value_ : std::move(value);
-  }
-
-  /**
-   * @brief Returns the stored value or a default value if empty.
-   *
-   * @param value The default value to return if empty.
-   * @return The stored value or the default value.
-   */
-  MGUTILITY_CNSTXPR inline T value_or(const T &value) {
-    return has_value_ ? value_ : value;
-  }
-
-  /**
-   * @brief Returns the stored value or a default value if empty (const
-   * version).
-   *
-   * @param value The default value to return if empty.
-   * @return The stored value or the default value.
-   */
-  MGUTILITY_CNSTXPR inline T value_or(const T &value) const {
-    return has_value_ ? value_ : value;
-  }
-
-  /**
-   * @brief Constructs the value in-place.
-   *
-   * @param value The value to emplace.
-   */
-  MGUTILITY_CNSTXPR inline void emplace(T value) {
-    value_ = std::move(value);
+  template <typename... Args>
+  MGUTILITY_CNSTXPR T &emplace(Args &&...args) noexcept {
+    reset();
     has_value_ = true;
   }
 
