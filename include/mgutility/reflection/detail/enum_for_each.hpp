@@ -34,6 +34,7 @@ SOFTWARE.
 
 namespace mgutility {
 namespace detail {
+
 /**
  * @brief Alias template for a string or string view type based on the presence
  * of a bitwise OR operator.

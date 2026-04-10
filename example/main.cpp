@@ -33,7 +33,7 @@ template <> struct mgutility::enum_range<Position> {
 
 // Specialize individual or all enum names
 template <> struct mgutility::custom_enum<Position> {
-  static constexpr mgutility::flat_map<Position> map{
+  static MGUTILITY_INLINE constexpr mgutility::flat_map<Position> map{
       // NOLINTNEXTLINE [modernize-use-designated-initializers]
       {Position::Top, "TOP"},
       // NOLINTNEXTLINE [modernize-use-designated-initializers]
@@ -83,16 +83,14 @@ int main() {
       });
 
   std::ranges::for_each(positions, [](auto &&pos) {
-    std::println("{} \t: {}", mgutility::to_underlying(pos.first),
-                 pos.second);
+    std::println("{} \t: {}", mgutility::to_underlying(pos.first), pos.second);
   });
 
 #else
 
   // Print each Position and its underlying value using a for loop
   for (auto &&elem : mgutility::enum_for_each<Position>()) {
-    if (!elem.second.empty() &&
-        elem.second.find('|') == mgutility::string_view::npos) {
+    if (!elem.second.empty()) {
 #if defined(ENUM_NAME_USE_FMT) ||                                              \
     (defined(MGUTILITY_HAS_HAS_INCLUDE) && __has_include(<fmt/format.h>))
       fmt::print("{} \t: {}\n", mgutility::to_underlying(elem.first),

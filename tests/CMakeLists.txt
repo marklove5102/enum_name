@@ -4,7 +4,6 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
 
 add_executable(${PROJECT_NAME} test_enum_name.cpp)
 

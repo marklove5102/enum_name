@@ -61,7 +61,15 @@ namespace detail {
  */
 #ifndef MGUTILITY_ENUM_NAME_BUFFER_SIZE
 // NOLINTNEXTLINE [cppcoreguidelines-macro-usage]
-#define MGUTILITY_ENUM_NAME_BUFFER_SIZE 128U
+#define MGUTILITY_ENUM_NAME_BUFFER_SIZE 32U
+#endif
+
+#ifndef MGUTILITY_INLINE
+#if MGUTILITY_CPLUSPLUS > 201402L
+#define MGUTILITY_INLINE inline
+#else
+#define MGUTILITY_INLINE
+#endif
 #endif
 
 /**
@@ -218,7 +226,7 @@ using flat_map = pair<T, const char *>[];
  */
 template <typename T> struct custom_enum {
   // #if MGUTILITY_CPLUSPLUS > 201402L
-  static constexpr flat_map<T> map = {};
+  static MGUTILITY_INLINE constexpr flat_map<T> map = {};
   // #else
   //     static constexpr flat_map<T> map() noexcept {
   //         return {}; // default: empty map
